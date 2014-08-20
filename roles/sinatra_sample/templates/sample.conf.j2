@@ -1,0 +1,37 @@
+server {
+    listen 80;
+    server_name www.sample.192.168.33.11.xip.io;
+    rewrite ^(.*) http://sample.192.168.33.11.xip.io$1 permanent;
+}
+
+server {
+    listen 80;
+    server_name sample.192.168.33.11.xip.io;
+
+    location / {
+        root /var/www/sample/public;
+        passenger_enabled on;
+        rails_env production;
+        passenger_ruby /usr/local/rbenv/versions/{{ ruby_version }}/bin/ruby;
+    }
+}
+
+server {
+    listen 443;
+    server_name sample.192.168.33.11.xip.io;
+
+    location / {
+        root /var/www/sample/public;
+        passenger_enabled on;
+        rails_env production;
+        passenger_ruby /usr/local/rbenv/versions/{{ ruby_version }}/bin/ruby;
+    }
+
+    ssl on;
+    ssl_certificate /var/www/ssl/sample.crt;
+    ssl_certificate_key /var/www/ssl/sample.key;
+    ssl_session_timeout 5m;
+    ssl_protocols SSLv2 SSLv3 TLSv1;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+}

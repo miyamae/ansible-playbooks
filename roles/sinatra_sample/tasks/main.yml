@@ -1,0 +1,31 @@
+- name: mkdir /var/www/sample
+  file: path=/var/www/sample state=directory owner=web group=web
+
+- name: mkdir /var/www/sample/public
+  file: path=/var/www/sample/public state=directory owner=web group=web
+
+- name: Copy Gemfile for sample application
+  copy: src=Gemfile dest=/var/www/sample/Gemfile owner=web group=web
+
+- name: Copy config.ru for sample application
+  copy: src=config.ru dest=/var/www/sample/config.ru owner=web group=web
+
+- name: Copy app.rb for sample application
+  copy: src=app.rb dest=/var/www/sample/app.rb owner=web group=web
+
+- name: Execute bundle install
+  sudo_user: web
+  shell: bash -lc "bundle install --path vender/bundle"
+         chdir=/var/www/sample
+
+- name: Copy sample SSL certificate
+  copy: src=sample.crt dest=/var/www/ssl/sample.crt owner=web group=web mode=0600
+
+- name: Copy sample SSL private key
+  copy: src=sample.key dest=/var/www/ssl/sample.key owner=web group=web mode=0600
+
+- name: Install Nginx configuration file for sample application
+  template: src=sample.conf.j2 dest=/etc/nginx/conf.d/sample.conf
+
+- name: Restart Nginx
+  service: name=nginx state=restarted

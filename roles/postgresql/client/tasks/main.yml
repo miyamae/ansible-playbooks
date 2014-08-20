@@ -1,0 +1,9 @@
+- name: Install PostgreSQL official yum repository
+  yum: name={{ postgresql_rpm }} state=present
+
+- name: Install PostgreSQL client packages
+  yum: name={{ item }} state=present
+  with_items:
+    - postgresql93
+    - postgresql93-devel
+    - postgresql93-libs

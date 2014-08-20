@@ -1,0 +1,35 @@
+- name: Add the user 'web'
+  user: name=web home=/var/www
+
+- name: chmod 755 /var/www
+  file: path=/var/www state=directory mode=0755 owner=web group=web
+
+- name: mkdir /var/www/ssl
+  file: path=/var/www/ssl state=directory mode=700 owner=web group=web
+
+- name: Install Passenger gem
+  gem: name=passenger version={{ passenger_version }}
+       user_install=no state=present
+       executable=/usr/local/rbenv/shims/gem
+
+- name: Run Passenger installer
+  shell: /usr/local/rbenv/shims/ruby /usr/local/rbenv/versions/{{ ruby_version }}/lib/ruby/gems/2.1.0/gems/passenger-{{ passenger_version }}/bin/passenger-install-nginx-module --auto --auto-download --prefix=/opt/nginx
+         creates=/opt/nginx
+
+- name: Install Nginx configuration file
+  template: src=nginx.conf.j2 dest=/opt/nginx/conf/nginx.conf
+
+- name: Create /etc/nginx/conf.d
+  file: path=/etc/nginx/conf.d state=directory
+
+- name: Install Passenger configuration file
+  template: src=passenger.conf.j2 dest=/etc/nginx/conf.d/passenger.conf
+
+- name: Install script for starts and stops Nginx
+  template: src=nginx.init.j2 dest=/etc/rc.d/init.d/nginx mode=0755
+
+- name: Install Nginx logrotate configuration file
+  template: src=logrotate_nginx.j2 dest=/etc/logrotate.d/nginx
+
+- name: Start Nginx
+  service: name=nginx state=started enabled=yes

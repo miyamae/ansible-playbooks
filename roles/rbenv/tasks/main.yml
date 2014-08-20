@@ -1,0 +1,32 @@
+- name: Install rbenv
+  git: repo=git://github.com/sstephenson/rbenv.git
+       dest=/usr/local/rbenv accept_hostkey=yes
+
+- name: Install rbenv ruby-build plugin
+  git: repo=git://github.com/sstephenson/ruby-build.git
+       dest=/usr/local/rbenv/plugins/ruby-build accept_hostkey=yes
+
+- name: Install rbenv initialize script
+  template: src=rbenv.sh.j2 dest=/etc/profile.d/rbenv.sh
+
+- name: Load rbenv initialize script
+  shell: source /etc/profile.d/rbenv.sh
+
+- name: Check Ruby version installed
+  shell: 'bash -lc "rbenv versions | grep {{ ruby_version }}"'
+  register: ruby_installed
+  ignore_errors: yes
+
+- name: Install Ruby version
+  shell: 'bash -lc "rbenv install {{ ruby_version }}"'
+  when: ruby_installed|failed
+
+- name: Use Ruby version
+  shell: 'bash -lc "rbenv global {{ ruby_version }}"'
+  when: ruby_installed|failed
+
+- name: Install Bundler gem
+  gem: name=bundler state=present user_install=no executable=/usr/local/rbenv/shims/gem
+
+- name: Install Rack gem
+  gem: name=rack state=present user_install=no executable=/usr/local/rbenv/shims/gem

@@ -1,0 +1,2 @@
+- name: Configure iptables
+  template: src=iptables_web_db.j2 dest=/etc/sysconfig/iptables mode=0600

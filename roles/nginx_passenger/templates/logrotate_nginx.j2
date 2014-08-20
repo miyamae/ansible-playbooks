@@ -1,0 +1,8 @@
+/opt/nginx/logs/*.log {
+    missingok
+    notifempty
+    sharedscrits
+    postrotate
+        [ ! -f /opt/nginx/logs/nginx.pid ] || kill -USR1 `cat /opt/nginx/logs/nginx.pid`
+    endscript
+}

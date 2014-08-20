@@ -1,0 +1,21 @@
+- hosts: web-servers
+  sudo: yes
+  vars_files:
+    - vars.yml
+  roles:
+    - role: common
+    - role: iptables
+    - role: rbenv
+    - role: sendmail
+    - role: postgresql/client
+    - role: nginx_passenger
+    - role: sinatra_sample
+
+- hosts: db-servers
+  sudo: yes
+  vars_files:
+    - vars.yml
+  roles:
+    - role: common
+    - role: iptables
+    - role: postgresql/server

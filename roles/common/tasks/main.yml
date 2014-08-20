@@ -1,0 +1,29 @@
+- name: Update yum package
+  shell: yum update -y
+
+- name: Install EPEL repository
+  yum: name={{ epel_rpm }} state=present
+
+- name: Install commonly required packages
+  yum: name={{ item }} state=present
+  with_items:
+    - make
+    - gcc
+    - gcc-c++
+    - glib2-devel
+    - zlib-devel
+    - readline-devel
+    - openssl-devel
+    - libyaml-devel
+    - curl-devel
+    - sqlite-devel
+    - ruby-devel
+    - ImageMagick-devel
+    - git
+    - libselinux-python
+
+- name: Disable SELinux
+  selinux: state=disabled
+
+- name: Setting local time zone (Japan)
+  shell: cp -p /usr/share/zoneinfo/Japan /etc/localtime
