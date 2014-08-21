@@ -7,25 +7,40 @@ server {
 server {
     listen 80;
     server_name sample.192.168.33.11.xip.io;
+    set $app_root /var/www/sample;
 
     location / {
-        root /var/www/sample/public;
+        root $app_root/public;
         passenger_enabled on;
         rails_env production;
         passenger_ruby /usr/local/rbenv/versions/{{ ruby_version }}/bin/ruby;
+
+        set $maintenance false;
+        if (-e $app_root/tmp/maintenance) {
+            set $maintenance true;
+        }
+        if ($request_uri ~ ^/(maintenance\.html)) {
+            set $maintenance false;
+        }
+        if ($remote_addr ~ ^(192\.168\.)) {
+            # set $maintenance false;
+        }
+        if ($maintenance = true) {
+            return 503;
+        }
+    }
+
+    error_page 503 @maintenance;
+    location @maintenance {
+        root $app_root/public;
+        rewrite ^(.*)$ /maintenance.html break;
     }
 }
 
 server {
     listen 443;
     server_name sample.192.168.33.11.xip.io;
-
-    location / {
-        root /var/www/sample/public;
-        passenger_enabled on;
-        rails_env production;
-        passenger_ruby /usr/local/rbenv/versions/{{ ruby_version }}/bin/ruby;
-    }
+    rewrite ^(.*) http://sample.192.168.33.11.xip.io$1 permanent;
 
     ssl on;
     ssl_certificate /var/www/ssl/sample.crt;

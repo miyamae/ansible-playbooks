@@ -4,6 +4,9 @@
 - name: mkdir /var/www/sample/public
   file: path=/var/www/sample/public state=directory owner=web group=web
 
+- name: mkdir /var/www/sample/tmp
+  file: path=/var/www/sample/tmp state=directory owner=web group=web
+
 - name: Copy Gemfile for sample application
   copy: src=Gemfile dest=/var/www/sample/Gemfile owner=web group=web
 
@@ -12,6 +15,9 @@
 
 - name: Copy app.rb for sample application
   copy: src=app.rb dest=/var/www/sample/app.rb owner=web group=web
+
+- name: Copy maintenance.html for sample application
+  copy: src=maintenance.html dest=/var/www/sample/public/maintenance.html owner=web group=web
 
 - name: Execute bundle install
   sudo_user: web
