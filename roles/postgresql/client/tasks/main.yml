@@ -7,3 +7,9 @@
     - postgresql93
     - postgresql93-devel
     - postgresql93-libs
+
+- name: Install PostgreSQL client initialize script
+  template: src=pgsql-9.3.sh.j2 dest=/etc/profile.d/pgsql-9.3.sh
+
+- name: Load PostgreSQL client initialize script
+  shell: source /etc/profile.d/pgsql-9.3.sh
