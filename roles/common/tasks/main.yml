@@ -17,10 +17,10 @@
     - libyaml-devel
     - curl-devel
     - sqlite-devel
-    - ruby-devel
     - ImageMagick-devel
     - git
     - libselinux-python
+    - patch
 
 - name: Disable SELinux
   selinux: state=disabled
