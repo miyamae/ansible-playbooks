@@ -1,15 +1,21 @@
+- name: Check PostgreSQL yum repository installed
+  command: test -f /etc/yum.repos.d/pgdg-94-centos.repo
+  register: yum_pg_installed
+  ignore_errors: yes
+
 - name: Install PostgreSQL official yum repository
   yum: name={{ postgresql_rpm }} state=present
+  when: yum_pg_installed|failed
 
 - name: Install PostgreSQL client packages
   yum: name={{ item }} state=present
   with_items:
-    - postgresql93
-    - postgresql93-devel
-    - postgresql93-libs
+    - postgresql94
+    - postgresql94-devel
+    - postgresql94-libs
 
 - name: Install PostgreSQL client initialize script
-  template: src=pgsql-9.3.sh.j2 dest=/etc/profile.d/pgsql-9.3.sh
+  template: src=pgsql-9.4.sh.j2 dest=/etc/profile.d/pgsql-9.4.sh
 
 - name: Load PostgreSQL client initialize script
-  shell: source /etc/profile.d/pgsql-9.3.sh
+  shell: source /etc/profile.d/pgsql-9.4.sh

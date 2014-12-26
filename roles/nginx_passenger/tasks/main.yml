@@ -13,7 +13,7 @@
        executable=/usr/local/rbenv/shims/gem
 
 - name: Run Passenger installer
-  shell: /usr/local/rbenv/shims/ruby /usr/local/rbenv/versions/{{ ruby_version }}/lib/ruby/gems/2.1.0/gems/passenger-{{ passenger_version }}/bin/passenger-install-nginx-module --auto --auto-download --prefix=/opt/nginx
+  shell: /usr/local/rbenv/shims/ruby /usr/local/rbenv/versions/{{ ruby_version }}/lib/ruby/gems/2.2.0/gems/passenger-{{ passenger_version }}/bin/passenger-install-nginx-module --auto --auto-download --prefix=/opt/nginx
          creates=/opt/nginx
 
 - name: Install Nginx configuration file

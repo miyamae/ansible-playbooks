@@ -1,24 +1,30 @@
-- name: Install PostgreSQL official yum repository (CentOS 6 x86_64)
+- name: Check PostgreSQL yum repository installed
+  command: test -f /etc/yum.repos.d/pgdg-94-centos.repo
+  register: yum_pg_installed
+  ignore_errors: yes
+
+- name: Install PostgreSQL official yum repository
   yum: name={{ postgresql_rpm }} state=present
+  when: yum_pg_installed|failed
 
 - name: Install PostgreSQL server packages
   yum: name={{ item }} state=present
   with_items:
-    - postgresql93
-    - postgresql93-server
-    - postgresql93-contrib
+    - postgresql94
+    - postgresql94-server
+    - postgresql94-contrib
 
 - name: Initialize PostgreSQL database
-  shell: service postgresql-9.3 initdb
-         creates=/var/lib/pgsql/9.3/data/postgresql.conf
+  shell: service postgresql-9.4 initdb
+         creates=/var/lib/pgsql/9.4/data/postgresql.conf
 
 - name: Install PostgreSQL configuration file
-  template: src=postgresql.conf.j2 dest=/var/lib/pgsql/9.3/data/postgresql.conf
+  template: src=postgresql.conf.j2 dest=/var/lib/pgsql/9.4/data/postgresql.conf
             owner=postgres group=postgres mode=0600
 
 - name: Install PostgreSQL client authentication configuration file
-  template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/9.3/data/pg_hba.conf
+  template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/9.4/data/pg_hba.conf
             owner=postgres group=postgres mode=0600
 
 - name: Start PostgreSQL
-  service: name=postgresql-9.3 state=started enabled=yes
+  service: name=postgresql-9.4 state=started enabled=yes

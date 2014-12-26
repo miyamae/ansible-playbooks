@@ -2,7 +2,7 @@
   shell: yum update -y
 
 - name: Install EPEL repository
-  yum: name={{ epel_rpm }} state=present
+  yum: name=epel-release state=present
 
 - name: Install commonly required packages
   yum: name={{ item }} state=present
@@ -12,6 +12,7 @@
     - gcc-c++
     - glib2-devel
     - zlib-devel
+    - libffi-devel
     - readline-devel
     - openssl-devel
     - libyaml-devel
