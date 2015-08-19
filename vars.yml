@@ -1,4 +1,4 @@
-ruby_version: 2.2.2
+ruby_version: 2.2.3
 passenger_version: 5.0.15
 
 # PostgreSQL 9.4 for CentOS 6 x86_64
