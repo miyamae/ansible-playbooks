@@ -1,5 +1,5 @@
 ruby_version: 2.2.3
-passenger_version: 5.0.15
+passenger_version: 5.0.17
 
 # PostgreSQL 9.4 for CentOS 6 x86_64
 postgresql_rpm: http://yum.postgresql.org/9.4/redhat/rhel-6-x86_64/pgdg-centos94-9.4-1.noarch.rpm
