@@ -8,7 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.insert_key = false
 
   config.vm.define :vagrant do |node|
-    node.vm.box = "chef/centos-6.6"
+    node.vm.box = "box-cutter/centos67"
     node.vm.network :private_network, ip: "192.168.33.11"
   end
 
