@@ -1,0 +1,31 @@
+- name: Add the user 'web'
+  user: name=web home=/var/www
+
+- name: chmod 755 /var/www
+  file: path=/var/www state=directory mode=0755 owner=web group=web
+
+- name: mkdir /var/www/ssl
+  file: path=/var/www/ssl state=directory mode=700 owner=web group=web
+
+- name: Copy .vimrc
+  copy: src=vimrc dest=/var/www/.vimrc owner=web group=web mode=0644
+
+- name: Check Nginx yum repository installed
+  command: test -f /etc/yum.repos.d/nginx.repo
+  register: yum_nginx_installed
+  ignore_errors: yes
+
+- name: Install Nginx official yum repository
+  yum: name={{ nginx_rpm }} state=present
+  when: yum_nginx_installed|failed
+
+- name: Install Nginx packages
+  yum: name={{ item }} state=present
+  with_items:
+    - nginx
+
+- name: Install Nginx configuration file
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+
+- name: Start Nginx
+  service: name=nginx state=started enabled=yes

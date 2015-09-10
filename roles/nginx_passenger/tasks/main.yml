@@ -7,6 +7,9 @@
 - name: mkdir /var/www/ssl
   file: path=/var/www/ssl state=directory mode=700 owner=web group=web
 
+- name: Copy .vimrc
+  copy: src=vimrc dest=/var/www/.vimrc owner=web group=web mode=0644
+
 - name: Install Passenger gem
   gem: name=passenger version={{ passenger_version }}
        user_install=no state=present

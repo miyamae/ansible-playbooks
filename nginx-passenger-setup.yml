@@ -9,7 +9,7 @@
     - role: sendmail
     - role: postgresql/client
     - role: nginx_passenger
-    - role: sinatra_sample
+    - role: sinatra_sample_passenger
 
 - hosts: db-servers
   sudo: yes
